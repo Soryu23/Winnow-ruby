@@ -1,13 +1,13 @@
 module Winnow
   class Fingerprinter
     attr_reader :guarantee, :noise, :preprocessor
-    alias_method :guarantee_threshold, :guarantee
-    alias_method :noise_threshold, :noise
+    alias guarantee_threshold guarantee
+    alias noise_threshold noise
 
     def initialize(params)
       @guarantee = params[:guarantee_threshold] || params[:t]
       @noise = params[:noise_threshold] || params[:k]
-      @preprocessor = params[:preprocessor] || Preprocessors::Plaintext.new
+      @preprocessor = params[:preprocessor] || Winnow::Plaintext.new
     end
 
     def fingerprints(str, params = {})
@@ -18,11 +18,14 @@ module Winnow
       windows(str, source).each do |window|
         least_fingerprint = window.min_by { |fingerprint| fingerprint[:value] }
         value = least_fingerprint[:value]
-        location = least_fingerprint[:location]
+        location = least_fingerprint[:location].location
 
         (fingerprints[value] ||= []) << location
       end
 
+      fingerprints.each do |_, value|
+        value.uniq!
+      end
       fingerprints
     end
 
@@ -41,7 +44,7 @@ module Winnow
         value = hash(tokens_k_gram.map { |(char)| char }.join)
         location = Location.new(source, tokens_k_gram.first[1])
 
-        {value: value, location: location}
+        { value: value, location: location }
       end
     end
 

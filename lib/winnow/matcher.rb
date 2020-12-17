@@ -7,8 +7,9 @@ module Winnow
         matched_values = fingerprints_a.keys & fingerprints_b.keys - whitelist
 
         matched_values.map do |value|
-          matches_a, matches_b = fingerprints_a[value], fingerprints_b[value]
-          MatchDatum.new(matches_a, matches_b)
+          matches_a = fingerprints_a[value]
+          matches_b = fingerprints_b[value]
+          MatchDatum.new(matches_a, matches_b).match
         end
       end
     end

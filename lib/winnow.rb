@@ -1,12 +1,25 @@
-require 'winnow/version'
-require 'winnow/preprocessor'
-require 'winnow/fingerprinter'
-require 'winnow/matcher'
+require_relative 'winnow/preprocessor'
+require_relative 'winnow/fingerprinter'
+require_relative 'winnow/matcher'
 
 module Winnow
-  class Location < Struct.new(:source, :index)
+  class Location
+    attr_reader :location
+
+    def initialize(source, index)
+      @location = { source: source, index: index }
+    end
+    #= Struct.new(:source, :index) do
   end
 
-  class MatchDatum < Struct.new(:matches_from_a, :matches_from_b)
+  class MatchDatum
+    attr_reader :match
+
+    def initialize(matches_from_a, matches_from_b)
+      @match = { matches_from_a: matches_from_a, matches_from_b: matches_from_b }
+    end
   end
+
+  # MatchDatum = Struct.new(:matches_from_a, :matches_from_b) do
+  # end
 end
